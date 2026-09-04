@@ -24,3 +24,17 @@ Load Balancer
 ┌──────────┐
 │ Server 2 │
 └──────────┘**
+
+
+## Screenshots
+
+### Server
+
+![WebSocket Server](./assets/server.png)
+
+### Clients
+
+<p align="center">
+  <img src="./assets/dobby.png" width="45%" />
+  <img src="./assets/hermione.png" width="45%" />
+</p>
