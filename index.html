@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>WebSocket // Terminal Chat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #050505;
+      color: #00ff88;
+      font-family: "Courier New", monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .terminal {
+      width: 100%;
+      max-width: 800px;
+      height: 650px;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.15);
+      background: #080808;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #00ff88;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 13px;
+    }
+
+    .online {
+      color: #00ff88;
+    }
+
+    .offline {
+      color: #ff4444;
+    }
+
+    .chat {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      border-left: 2px solid #00ff88;
+      background: #0d0d0d;
+      line-height: 1.5;
+    }
+
+    .system {
+      color: #777;
+      border-left-color: #555;
+    }
+
+    .input-area {
+      display: flex;
+      border-top: 1px solid #00ff88;
+    }
+
+    input {
+      flex: 1;
+      background: #050505;
+      color: #00ff88;
+      border: none;
+      outline: none;
+      padding: 16px;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: #555;
+    }
+
+    button {
+      background: #00ff88;
+      color: #050505;
+      border: none;
+      padding: 0 24px;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00cc6a;
+    }
+
+    .prompt {
+      color: #00ff88;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="terminal">
+
+    <div class="header">
+      <div class="title">
+        [ WEBSOCKET // CHAT ]
+      </div>
+
+      <div id="status" class="status offline">
+        ● DISCONNECTED
+      </div>
+    </div>
+
+    <div id="chat" class="chat">
+      <div class="message system">
+        <span class="prompt">></span>
+        Initializing secure communication channel...
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input
+        id="messageInput"
+        type="text"
+        placeholder="Type a message..."
+        autocomplete="off"
+      />
+
+      <button id="sendBtn">
+        SEND
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:8080");
+
+    const status = document.getElementById("status");
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    socket.addEventListener("open", () => {
+      status.textContent = "● CONNECTED";
+      status.className = "status online";
+
+      addMessage("Connection established.", true);
+    });
+
+    socket.addEventListener("message", (event) => {
+      addMessage(event.data);
+    });
+
+    socket.addEventListener("close", () => {
+      status.textContent = "● DISCONNECTED";
+      status.className = "status offline";
+
+      addMessage("Connection terminated.", true);
+    });
+
+    socket.addEventListener("error", () => {
+      status.textContent = "● CONNECTION ERROR";
+      status.className = "status offline";
+    });
+
+    function sendMessage() {
+      const message = input.value.trim();
+
+      if (!message) return;
+
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(message);
+
+        addMessage(`You: ${message}`);
+
+        input.value = "";
+      }
+    }
+
+    function addMessage(message, system = false) {
+      const div = document.createElement("div");
+
+      div.className = system
+        ? "message system"
+        : "message";
+
+      div.textContent = system
+        ? `> ${message}`
+        : message;
+
+      chat.appendChild(div);
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+
+</body>
+</html>
