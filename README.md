@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/server.png" width="100%">
-</p>
-
 <h1 align="center">WebSocket Real-Time Chat Server</h1>
 
 <h3 align="center">
@@ -23,7 +19,7 @@ Real-Time Communication using Node.js, Express.js and WebSockets
 <h3 align="center">Server</h3>
 
 <p align="center">
-  <img src="assets/server.png" width="100%">
+  <img src="assets/server.png" width="49%">
 </p>
 
 <h3 align="center">Clients</h3>
@@ -46,7 +42,7 @@ Real-Time Communication using Node.js, Express.js and WebSockets
 **For production-scale systems, you'd typically introduce a shared messaging layer**
 
 ```text
-**Client
+Client
    ↓
 Load Balancer
    ↓
@@ -58,6 +54,6 @@ Load Balancer
       ↕
 ┌──────────┐
 │ Server 2 │
-└──────────┘**
+└──────────┘
 
 
