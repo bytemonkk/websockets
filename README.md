@@ -14,7 +14,7 @@ Real-Time Communication using Node.js, Express.js and WebSockets
 
 ---
 
-## Screenshots
+## 
 
 <h3 align="center">Server</h3>
 
